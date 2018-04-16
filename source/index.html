@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+    <link rel="stylesheet" href="/styles/app.css">
+    <!-- Icons -->
+    <link rel="apple-touch-icon" sizes="57x57" href="images/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="images/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="images/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="images/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="images/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="images/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="images/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="images/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="images/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="images/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+    <script src="scripts/app.min.js" defer></script>
+    <script src="scripts/popups.min.js" defer></script>
+    <script src="scripts/station_list.min.js"></script>
+    <title>Rail Timetable</title>
+    <style type="text/css">
+        .ui-header .ui-title, .ui-footer .ui-title, .ui-collapsible-collapsed .ui-collapsible-heading-collapsed {
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+            /* text-overflow:visible;  */ /* -Uncomment - to disable Ellipsis completely use with Caution- !*/
+        }
+        img {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div data-role="page">
+        <div data-role="header">
+            <h2>Rail Timetable</h2>
+            <a href="#options_pnl" id="options" data-role="button" data-icon="bars" data-iconpos="notext"></a>
+        </div>
+        <div data-role="content">
+            <div id="controls" data-role="collapsible" data-collapsed="false">
+                <h3><span id="journey">Journey</span></h3>
+                <div class="ui-grid-c">
+                    <!-- <div class="ui-block-a" style="width:12%"><label for="date" style="margin-top:20px">Date: </label></div>-->
+                    <div class="ui-block-b" style="width:72%"><input id="date" size="12" type="date" placeholder="Date"/></div>
+                    <div class="ui-block-c" style="width:14%"><a href="#" id="up-date" data-role="button" data-icon="arrow-u" data-iconpos="notext"></a></div>
+                    <div class="ui-block-c" style="width:14%"><a href="#" id="down-date" data-role="button" data-icon="arrow-d" data-iconpos="notext"></a></div>
+                </div>
+                <div class="ui-grid-c">
+                    <!--<div class="ui-block-a" style="width:20%"><label for="time" style="margin-top:20px">Time: </label></div>-->
+                    <div class="ui-block-b" style="width:72%"><input id="time" type="time"/></div>
+                    <div class="ui-block-c" style="width:14%"><a href="#" id="up-time" data-role="button" data-icon="arrow-u" data-iconpos="notext"></a></div>
+                    <div class="ui-block-c" style="width:14%"><a href="#" id="down-time" data-role="button" data-icon="arrow-d" data-iconpos="notext"></a></div>
+                </div>
+
+                <form>
+                    <div class="ui-grid-a">
+                        <div class="ui-block-a" style="width:86%">
+                            <input type="text" data-type="search" class="filter-box" placeholder="Leaving from..." id="from-box">
+                        </div>
+                        <div class="ui-block-b" style="width:14%">
+                            <a href="#" id="from-near" class="here ui-disabled" data-role="button" data-icon="location" data-iconpos="notext"></a>
+                        </div>
+                    </div>
+                    <div class="filterable_list">
+                        <ul id="from-list" data-theme='b' data-role='listview' data-inset='true'
+                            data-filter='true' data-input="#from-box">
+                        </ul>
+                    </div>
+                </form>
+
+                <form>
+                    <div class="ui-grid-a">
+                        <div class="ui-block-a" style="width:86%">
+                            <input type="text" data-type="search" class="filter-box" placeholder="Going to..." id="to-box">
+                        </div>
+                        <div class="ui-block-b" style="width:14%">
+                            <a href="#" id="to-near" class="here ui-disabled" data-role="button" data-icon="location" data-iconpos="notext"></a>
+                        </div>
+                    </div>
+                    <div class='filterable_list'>
+                        <ul id="to-list" data-theme='b' data-role='listview' data-inset='true'
+                            data-filter='true' data-input="#to-box">
+                        </ul>
+                    </div>
+                </form>
+                <!-- <a href="#" id="add-fav" data-role="button" data-icon="star" data-iconpos="right">Add to Favourites</a> -->
+                <a href="#" id="add-fav" data-role="button" data-icon="star" data-iconpos="notext" data-inline="true"></a>
+                <a href="#" id="clear" data-role="button" data-icon="delete" data-iconpos="notext" data-inline="true"></a>
+                <a id="get_tt" href="#" data-role="button" data-icon="bullets" data-iconpos="right" data-inline="true">Get Departures</a>
+            </div>
+            <!-- Resulting departures go here. -->
+            <ul id="list" data-role="listview" data-inset="true">
+
+            </ul>
+        </div>
+        <div data-role="footer" data-position="fixed">
+            <div data-role="navbar">
+            <nav>
+                <a href="#about_page">About...</a>
+                <a href="#help">Help...</a>
+                <a href="#main" id="indicator" data-role="button" data-inline="true">Offline</a>
+            </nav>
+            </div>
+        </div>
+        <div data-role="panel" id="options_pnl">
+            <h1>Quick-List</h1>
+            <p>Tap on an item below to set a journey.
+                The From and To stations and the departure time are as specified in the quick-list item.
+                The date will be today's date initially.</p>
+            <ul id="quicklist" data-role="listview" data-inset="true">
+                <li>Empty</li>
+            </ul>
+
+        </div>
+    </div>
+
+        <div data-role="page" id="about_page">
+
+        <div data-role="header">
+            <h1>Train Scheduler</h1>
+            <a href="#" data-rel="back" data-icon="back" data-iconpos="notext"></a>
+        </div>
+
+        <div data-role="content">
+            <p>This app collects and displays scheduled departures from ScotRail stations.  The program is free software.</p>
+            <p>This program comes without warranty.  <i>I am not liable for you being late for a train.</i></p>
+            <p>Thanks are due to TransportAPI (<a href="https://developer.transportapi.com">https://developer.transportapi.com</a>) who provide the feeds this app relies on.</p>
+            <p><i><b>Issues?: </b> Contact me at <a href="mailto:amcmonnies@uws.ac.uk">amcmonnies@gmail.com</a></i></p>
+        </div>
+
+        <div data-role="footer" data-position="fixed">
+            <p>Copyright (c) A.McMonnies, UWS.</p>
+         </div>
+    </div>
+
+    <div data-role="page" id="help">
+
+        <div data-role="header">
+            <h1>TransportAPI</h1>
+            <a href="#" data-rel="back" data-icon="back" data-iconpos="notext"></a>
+        </div>
+
+        <div data-role="content" id="help-page">
+            <img src="images/help.png" alt="Help"/>
+        </div>
+
+        <div data-role="footer" data-position="fixed">
+        </div>
+    </div>
+</body>
+</html>

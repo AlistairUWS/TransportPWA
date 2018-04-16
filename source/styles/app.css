@@ -1,0 +1,5 @@
+.ui-header .ui-title {
+    /* These settings turn off header text truncation. */ overflow: visible !important;
+    white-space: normal !important;
+    margin: 0 10%;
+}
